@@ -1,24 +1,84 @@
 package com.intellimatch.ui.controller;
 
+import com.intellimatch.model.UserAccount;
+import com.intellimatch.service.AuthService;
+import com.intellimatch.service.DatabaseService;
+import com.intellimatch.service.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ApplicantLoginController {
 
+    @FXML private TextField loginEmailField;
+    @FXML private PasswordField loginPasswordField;
+
+    @FXML private TextField signUpNameField;
+    @FXML private TextField signUpBackgroundField;
+    @FXML private TextField signUpSkillsField;
+    @FXML private TextField signUpEmailField;
+    @FXML private PasswordField signUpPasswordField;
+    @FXML private Label statusLabel;
+
+    private final AuthService authService = new AuthService();
+    private final DatabaseService databaseService = DatabaseService.getInstance();
+
+    @FXML
+    private void initialize() {
+        statusLabel.setText("Seed login example: candidate1@maildemo.com / " + databaseService.getDefaultSeedPassword());
+    }
+
     @FXML
     private void onBack(ActionEvent event) throws IOException {
+        SessionManager.clear();
         navigateTo("/fxml/landing.fxml", event);
     }
 
     @FXML
     private void onLogin(ActionEvent event) throws IOException {
-        navigateTo("/fxml/main.fxml", event);
+        Optional<UserAccount> account = authService.loginCandidate(
+            loginEmailField.getText(),
+            loginPasswordField.getText()
+        );
+        if (account.isEmpty()) {
+            statusLabel.setText("Invalid credentials or unauthorized role for candidate portal.");
+            return;
+        }
+
+        SessionManager.setCurrentUser(account.get());
+        databaseService.recordLogin(account.get().getEmail());
+        navigateTo("/fxml/candidate-dashboard.fxml", event);
+    }
+
+    @FXML
+    private void onSignUp(ActionEvent event) throws IOException {
+        List<String> skills = parseSkills(signUpSkillsField.getText());
+        try {
+            UserAccount account = authService.signUpCandidate(
+                signUpNameField.getText(),
+                signUpEmailField.getText(),
+                signUpPasswordField.getText(),
+                signUpBackgroundField.getText(),
+                skills
+            );
+            SessionManager.setCurrentUser(account);
+            databaseService.recordLogin(account.getEmail());
+            navigateTo("/fxml/candidate-dashboard.fxml", event);
+        } catch (IllegalArgumentException ex) {
+            statusLabel.setText(ex.getMessage());
+        }
     }
 
     private void navigateTo(String fxmlPath, ActionEvent event) throws IOException {
@@ -33,5 +93,16 @@ public class ApplicantLoginController {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    private List<String> parseSkills(String value) {
+        if (value == null || value.isBlank()) {
+            return List.of();
+        }
+        return Arrays.stream(value.split(","))
+            .map(String::trim)
+            .filter(skill -> !skill.isBlank())
+            .distinct()
+            .collect(Collectors.toList());
     }
 }

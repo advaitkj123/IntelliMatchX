@@ -1,6 +1,7 @@
 package com.intellimatch.ui.controller;
 
 import com.intellimatch.model.Applicant;
+import com.intellimatch.model.CompanySkillMatchResult;
 import com.intellimatch.model.MatchResult;
 import com.intellimatch.model.Recruiter;
 import com.intellimatch.model.Skill;
@@ -16,6 +17,8 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -31,6 +34,8 @@ public class MainController implements Initializable {
     @FXML private ComboBox<String> strategyComboBox;
     @FXML private ComboBox<String> applicantComboBox;
     @FXML private ComboBox<String> recruiterComboBox;
+    @FXML private TextField candidateNameField;
+    @FXML private TextField candidateSkillsField;
 
     @FXML private TableView<MatchResult> matchTableView;
     @FXML private TableColumn<MatchResult, String> colApplicant;
@@ -149,6 +154,46 @@ public class MainController implements Initializable {
         statusLabel.setText("Showing top candidates for: " + recruiter.getCompany());
     }
 
+    @FXML
+    private void onFindCompaniesForCandidateSkills() {
+        String candidateName = candidateNameField.getText() == null ? "" : candidateNameField.getText().trim();
+        List<String> keySkills = parseCommaSeparatedSkills(candidateSkillsField.getText());
+
+        if (candidateName.isBlank()) {
+            statusLabel.setText("Enter a candidate name to search matching companies.");
+            return;
+        }
+        if (keySkills.isEmpty()) {
+            statusLabel.setText("Enter at least one skill (comma-separated).");
+            return;
+        }
+
+        List<CompanySkillMatchResult> companyMatches;
+        try {
+            companyMatches = matchingService.findCompaniesByCandidateSkills(candidateName, keySkills, 20);
+        } catch (IllegalArgumentException ex) {
+            statusLabel.setText(ex.getMessage());
+            return;
+        }
+
+        List<MatchResult> tableResults = companyMatches.stream()
+            .map(this::toDisplayMatchResult)
+            .collect(Collectors.toList());
+
+        matchTableView.setItems(FXCollections.observableArrayList(tableResults));
+        currentResults = tableResults;
+
+        if (tableResults.isEmpty()) {
+            applicantJustificationArea.clear();
+            recruiterJustificationArea.clear();
+            statusLabel.setText("No companies found for those skills.");
+            return;
+        }
+
+        matchTableView.getSelectionModel().selectFirst();
+        statusLabel.setText("Found " + tableResults.size() + " company matches for " + candidateName + ".");
+    }
+
     private void applySelectedStrategy() {
         String selected = strategyComboBox.getValue();
         if ("Exact Skill Count Strategy".equals(selected)) {
@@ -162,6 +207,87 @@ public class MainController implements Initializable {
         List<String> feed = matchingService.getNotificationLogger().getNotificationFeed();
         notificationListView.setItems(FXCollections.observableArrayList(feed));
         notificationListView.scrollTo(feed.size() - 1);
+    }
+
+    private List<String> parseCommaSeparatedSkills(String input) {
+        if (input == null || input.isBlank()) {
+            return List.of();
+        }
+        return Arrays.stream(input.split(","))
+            .map(String::trim)
+            .filter(skill -> !skill.isBlank())
+            .distinct()
+            .collect(Collectors.toList());
+    }
+
+    private MatchResult toDisplayMatchResult(CompanySkillMatchResult result) {
+        Applicant pseudoApplicant = new Applicant(
+            result.getCandidateName(),
+            "candidate@intellimatch.local",
+            "Skill-based company search",
+            12
+        );
+
+        Recruiter pseudoRecruiter = new Recruiter(
+            result.getRecruiterName(),
+            "recruiter@intellimatch.local",
+            result.getCompany(),
+            result.getInternshipTitle(),
+            12
+        );
+
+        List<String> matchedDisplaySkills = new ArrayList<>();
+        result.getExactMatchedSkills().forEach(skill -> {
+            matchedDisplaySkills.add("exact: " + skill);
+            pseudoApplicant.addSkill(new Skill(skill, 1.0));
+        });
+        result.getSimilarMatchedSkills().forEach(skill -> {
+            matchedDisplaySkills.add("similar: " + skill);
+            pseudoApplicant.addSkill(new Skill(skill, 0.7));
+        });
+        result.getMissingSkills().forEach(skill -> pseudoRecruiter.addSkill(new Skill(skill, 1.0)));
+
+        String exactSkills = result.getExactMatchedSkills().isEmpty()
+            ? "None"
+            : String.join(", ", result.getExactMatchedSkills());
+        String similarSkills = result.getSimilarMatchedSkills().isEmpty()
+            ? "None"
+            : String.join(", ", result.getSimilarMatchedSkills());
+        String missingSkills = result.getMissingSkills().isEmpty()
+            ? "None"
+            : String.join(", ", result.getMissingSkills());
+
+        String applicantView = String.format(
+            "Candidate: %s%nOpportunity: %s at %s%nScore: %s%n%nExact skill matches: %s%nSimilar skill matches: %s%nMissing skills: %s",
+            result.getCandidateName(),
+            result.getInternshipTitle(),
+            result.getCompany(),
+            result.getScorePercentage(),
+            exactSkills,
+            similarSkills,
+            missingSkills
+        );
+
+        String recruiterView = String.format(
+            "Company: %s (%s)%nCandidate: %s%nFit score: %s%n%nExact matches: %s%nSimilar matches: %s%nMissing requirements: %s",
+            result.getCompany(),
+            result.getInternshipTitle(),
+            result.getCandidateName(),
+            result.getScorePercentage(),
+            exactSkills,
+            similarSkills,
+            missingSkills
+        );
+
+        return new MatchResult(
+            pseudoApplicant,
+            pseudoRecruiter,
+            result.getScore(),
+            matchedDisplaySkills,
+            result.getMissingSkills(),
+            applicantView,
+            recruiterView
+        );
     }
 
     private void loadExplainabilityDashboard() {

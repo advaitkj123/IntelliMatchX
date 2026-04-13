@@ -21,6 +21,11 @@ public class LandingController {
         navigateTo("/fxml/applicant-login.fxml", event);
     }
 
+    @FXML
+    private void onAdminSelected(ActionEvent event) throws IOException {
+        navigateTo("/fxml/admin-dashboard.fxml", event);
+    }
+
     private void navigateTo(String fxmlPath, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
