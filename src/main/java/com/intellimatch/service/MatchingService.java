@@ -22,31 +22,32 @@ public class MatchingService {
 
     private final MatchingEngine engine;
     private final NotificationLogger notificationLogger;
-    private final DataSeedService seedService;
+    private final DatabaseService databaseService;
     private List<Applicant> applicants;
     private List<Recruiter> recruiters;
 
     public MatchingService() {
         this.engine = new MatchingEngine();
         this.notificationLogger = new NotificationLogger();
-        this.seedService = new DataSeedService();
+        this.databaseService = DatabaseService.getInstance();
 
         MatchEventBus.getInstance().subscribe(notificationLogger);
-
-        this.applicants = seedService.seedApplicants();
-        this.recruiters = seedService.seedRecruiters();
+        refreshData();
     }
 
     public List<MatchResult> runFullBidirectionalMatch() {
+        refreshData();
         notificationLogger.clearFeed();
         return engine.matchAll(applicants, recruiters);
     }
 
     public List<MatchResult> getRecommendationsForApplicant(Applicant applicant, int topN) {
+        refreshData();
         return engine.getRecommendationsForApplicant(applicant, recruiters, topN);
     }
 
     public List<MatchResult> getTopCandidatesForRecruiter(Recruiter recruiter, int topN) {
+        refreshData();
         return engine.getTopCandidatesForRecruiter(recruiter, applicants, topN);
     }
 
@@ -59,6 +60,7 @@ public class MatchingService {
             String candidateName,
             List<String> keySkills,
             int topN) {
+        refreshData();
         if (candidateName == null || candidateName.isBlank()) {
             throw new IllegalArgumentException("Candidate name cannot be blank");
         }
@@ -92,16 +94,31 @@ public class MatchingService {
         engine.setStrategy(strategy);
     }
 
-    public List<Applicant> getApplicants() { return applicants; }
-    public List<Recruiter> getRecruiters() { return recruiters; }
+    public List<Applicant> getApplicants() {
+        refreshData();
+        return applicants;
+    }
+
+    public List<Recruiter> getRecruiters() {
+        refreshData();
+        return recruiters;
+    }
+
     public NotificationLogger getNotificationLogger() { return notificationLogger; }
     public MatchingEngine getEngine() { return engine; }
 
     public void addApplicant(Applicant applicant) {
-        applicants.add(applicant);
+        databaseService.addApplicantProfile(applicant);
+        refreshData();
     }
 
     public void addRecruiter(Recruiter recruiter) {
-        recruiters.add(recruiter);
+        databaseService.addRecruiterProfile(recruiter);
+        refreshData();
+    }
+
+    private void refreshData() {
+        this.applicants = databaseService.getAllApplicants();
+        this.recruiters = databaseService.getAllRecruiters();
     }
 }

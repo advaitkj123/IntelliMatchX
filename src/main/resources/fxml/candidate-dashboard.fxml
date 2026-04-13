@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.intellimatch.ui.controller.CandidateDashboardController"
+            stylesheets="@../styles/main.css"
+            prefWidth="1200" prefHeight="780">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="12">
+            <padding><Insets top="10" bottom="10" left="18" right="18"/></padding>
+            <Label text="IntelliMatch-X" styleClass="app-title"/>
+            <Label text="Candidate Dashboard" styleClass="app-subtitle"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Logout" onAction="#onLogout" styleClass="btn,btn-danger"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+
+            <VBox spacing="8" styleClass="auth-card">
+                <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                <Label text="Candidate Profile" styleClass="section-header"/>
+                <HBox spacing="8">
+                    <Label text="Name:" styleClass="control-label"/>
+                    <Label fx:id="candidateNameLabel"/>
+                    <Label text="Email:" styleClass="control-label"/>
+                    <Label fx:id="candidateEmailLabel"/>
+                </HBox>
+                <Label text="Current Skills:" styleClass="control-label"/>
+                <Label fx:id="currentSkillsLabel" wrapText="true"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="addSkillsField" promptText="Add skills (comma separated)" HBox.hgrow="ALWAYS"/>
+                    <Button text="Add Skills" onAction="#onAddSkills" styleClass="btn,btn-primary"/>
+                    <Button text="Find Matching Companies" onAction="#onFindCompanyMatches" styleClass="btn,btn-success"/>
+                </HBox>
+            </VBox>
+
+            <TableView fx:id="companyTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colCompany" text="Company" prefWidth="220"/>
+                    <TableColumn fx:id="colRole" text="Role" prefWidth="250"/>
+                    <TableColumn fx:id="colScore" text="Score" prefWidth="100"/>
+                    <TableColumn fx:id="colExact" text="Exact Matches" prefWidth="260"/>
+                    <TableColumn fx:id="colSimilar" text="Similar Matches" prefWidth="260"/>
+                </columns>
+            </TableView>
+
+            <TextArea fx:id="matchInsightArea" editable="false" wrapText="true" prefHeight="170"/>
+
+            <Label fx:id="statusLabel" text="Ready." styleClass="control-label"/>
+        </VBox>
+    </center>
+</BorderPane>

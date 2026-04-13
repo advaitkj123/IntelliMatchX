@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -20,7 +22,7 @@
         <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="12">
             <padding><Insets top="10" bottom="10" left="18" right="18"/></padding>
             <Label text="IntelliMatch-X" styleClass="app-title"/>
-            <Label text="Applicant Portal" styleClass="app-subtitle"/>
+            <Label text="Candidate Portal" styleClass="app-subtitle"/>
             <Region HBox.hgrow="ALWAYS"/>
         </HBox>
     </top>
@@ -28,28 +30,56 @@
     <center>
         <VBox alignment="CENTER" styleClass="auth-shell">
             <children>
-                <VBox spacing="14" styleClass="auth-card" maxWidth="440">
-                    <padding><Insets top="32" right="32" bottom="32" left="32"/></padding>
+                <VBox spacing="14" styleClass="auth-card" maxWidth="560">
+                    <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
 
-                    <Label text="Applicant Login" styleClass="auth-title"/>
-                    <Label text="Sign in to explore opportunities and matching results." styleClass="auth-subtitle"/>
+                    <Label text="Candidate Access" styleClass="auth-title"/>
+                    <Label text="Login or sign up to manage your profile and discover matching companies."
+                           styleClass="auth-subtitle"/>
 
-                    <Label text="Email" styleClass="control-label"/>
-                    <TextField promptText="Enter applicant email" styleClass="auth-input"/>
+                    <TabPane tabClosingPolicy="UNAVAILABLE">
+                        <tabs>
+                            <Tab text="Login">
+                                <VBox spacing="10">
+                                    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                                    <Label text="Email" styleClass="control-label"/>
+                                    <TextField fx:id="loginEmailField" promptText="candidate email" styleClass="auth-input"/>
+                                    <Label text="Password" styleClass="control-label"/>
+                                    <PasswordField fx:id="loginPasswordField" promptText="password" styleClass="auth-input"/>
+                                    <Button text="Login"
+                                            onAction="#onLogin"
+                                            prefWidth="220"
+                                            styleClass="btn,btn-success"/>
+                                </VBox>
+                            </Tab>
+                            <Tab text="Sign Up">
+                                <VBox spacing="10">
+                                    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                                    <Label text="Name" styleClass="control-label"/>
+                                    <TextField fx:id="signUpNameField" promptText="full name" styleClass="auth-input"/>
+                                    <Label text="Background" styleClass="control-label"/>
+                                    <TextField fx:id="signUpBackgroundField" promptText="e.g., CS student, career switcher" styleClass="auth-input"/>
+                                    <Label text="Current Skill Set" styleClass="control-label"/>
+                                    <TextField fx:id="signUpSkillsField" promptText="comma-separated skills" styleClass="auth-input"/>
+                                    <Label text="Gmail / Email" styleClass="control-label"/>
+                                    <TextField fx:id="signUpEmailField" promptText="email" styleClass="auth-input"/>
+                                    <Label text="Password" styleClass="control-label"/>
+                                    <PasswordField fx:id="signUpPasswordField" promptText="minimum 6 characters" styleClass="auth-input"/>
+                                    <Button text="Create Candidate Account"
+                                            onAction="#onSignUp"
+                                            prefWidth="240"
+                                            styleClass="btn,btn-primary"/>
+                                </VBox>
+                            </Tab>
+                        </tabs>
+                    </TabPane>
 
-                    <Label text="Password" styleClass="control-label"/>
-                    <PasswordField promptText="Enter password" styleClass="auth-input"/>
-
-                    <HBox spacing="12">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
                         <Button text="Back"
                                 onAction="#onBack"
-                                prefWidth="140"
+                                prefWidth="130"
                                 styleClass="btn,btn-default"/>
-
-                        <Button text="Login"
-                                onAction="#onLogin"
-                                prefWidth="220"
-                                styleClass="btn,btn-success"/>
+                        <Label fx:id="statusLabel" textFill="#8b949e" wrapText="true"/>
                     </HBox>
                 </VBox>
             </children>
