@@ -233,6 +233,67 @@
     -fx-wrap-text: true;
 }
 
+.auth-tabs {
+    -fx-background-color: #11161d;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 8;
+}
+
+.auth-tabs .tab-header-area {
+    -fx-padding: 0 0 8 0;
+}
+
+.auth-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.auth-tabs .tab {
+    -fx-background-color: #1a2029;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 6 14;
+}
+
+.auth-tabs .tab .tab-label {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.auth-tabs .tab:selected {
+    -fx-background-color: #1f6feb;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+}
+
+.auth-tabs .tab:selected .tab-label {
+    -fx-text-fill: #f8fbff;
+}
+
+.auth-tabs:focused .tab-header-area .headers-region .tab:selected .focus-indicator,
+.auth-tabs .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.auth-tabs .tab-content-area {
+    -fx-background-color: #11161d;
+    -fx-background-radius: 8;
+    -fx-padding: 4;
+}
+
+.auth-form-section {
+    -fx-spacing: 11;
+}
+
+.auth-form-section .control-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #9ca7b4;
+}
+
 .role-button {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -249,5 +310,132 @@
     -fx-background-radius: 8;
     -fx-padding: 10 12;
     -fx-font-size: 13px;
+}
+
+.auth-input:focused {
+    -fx-border-color: #58a6ff;
+    -fx-effect: dropshadow(gaussian, rgba(88, 166, 255, 0.18), 8, 0.3, 0, 1);
+}
+
+.auth-action-btn {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.3px;
+    -fx-padding: 10 16;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.auth-action-primary {
+    -fx-background-color: #1f6feb;
+    -fx-text-fill: #f8fbff;
+    -fx-border-color: #1a5ed0;
+    -fx-effect: dropshadow(gaussian, rgba(88, 166, 255, 0.26), 12, 0.3, 0, 4);
+}
+
+.auth-action-primary:hover {
+    -fx-background-color: #2978f2;
+}
+
+.auth-action-primary:pressed {
+    -fx-background-color: #1b63d2;
+}
+
+.auth-action-secondary {
+    -fx-effect: dropshadow(gaussian, rgba(63, 185, 80, 0.22), 10, 0.3, 0, 3);
+}
+
+.auth-action-btn:hover {
+    -fx-opacity: 0.95;
+}
+
+.auth-action-btn:pressed {
+    -fx-translate-y: 1;
+}
+
+.admin-page {
+    -fx-background-color: linear-gradient(to bottom right, #0d1117, #121b2a);
+}
+
+.admin-summary-row {
+    -fx-spacing: 12;
+}
+
+.admin-stat-card {
+    -fx-background-color: #151d2b;
+    -fx-border-color: #2f3b4f;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+}
+
+.admin-stat-title {
+    -fx-font-size: 11px;
+    -fx-text-fill: #90a0b8;
+    -fx-font-weight: 700;
+}
+
+.admin-stat-value {
+    -fx-font-size: 28px;
+    -fx-text-fill: #e6edf3;
+    -fx-font-weight: 800;
+}
+
+.admin-conversion-pill {
+    -fx-background-color: #172336;
+    -fx-border-color: #2f3b4f;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-padding: 8 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #b3c1d6;
+}
+
+.admin-textarea {
+    -fx-background-color: #151d2b;
+    -fx-border-color: #2f3b4f;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-family: 'Consolas', 'Courier New', monospace;
+    -fx-font-size: 12px;
+}
+
+.admin-table {
+    -fx-background-color: #151d2b;
+    -fx-border-color: #2f3b4f;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-table-cell-border-color: #243043;
+}
+
+.admin-table .column-header-background {
+    -fx-background-color: #1a2638;
+}
+
+.admin-table .column-header .label {
+    -fx-text-fill: #97a9c0;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.admin-table .table-row-cell {
+    -fx-background-color: #151d2b;
+    -fx-border-color: #243043;
+    -fx-border-width: 0 0 1 0;
+}
+
+.admin-table .table-row-cell:filled:hover {
+    -fx-background-color: #1d2b40;
+}
+
+.admin-table .table-row-cell:filled:selected {
+    -fx-background-color: #23436d;
+}
+
+.admin-table .table-cell {
+    -fx-text-fill: #d7e1ef;
+    -fx-font-size: 12px;
 }
 

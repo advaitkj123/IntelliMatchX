@@ -1,22 +1,27 @@
 package com.intellimatch.ui.controller;
 
 import com.intellimatch.model.AnalyticsSnapshot;
+import com.intellimatch.ui.SceneNavigator;
 import com.intellimatch.service.DatabaseService;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class AdminDashboardController implements Initializable {
 
@@ -28,14 +33,26 @@ public class AdminDashboardController implements Initializable {
     @FXML private Label conversionLabel;
     @FXML private Label statusLabel;
 
-    @FXML private TextArea topSkillsArea;
-    @FXML private TextArea demandSkillsArea;
-    @FXML private TextArea workModeDemandArea;
+    @FXML private TableView<MetricRow> topSkillsTable;
+    @FXML private TableColumn<MetricRow, String> topRankCol;
+    @FXML private TableColumn<MetricRow, String> topMetricCol;
+    @FXML private TableColumn<MetricRow, String> topCountCol;
+
+    @FXML private TableView<MetricRow> demandSkillsTable;
+    @FXML private TableColumn<MetricRow, String> demandRankCol;
+    @FXML private TableColumn<MetricRow, String> demandMetricCol;
+    @FXML private TableColumn<MetricRow, String> demandCountCol;
+
+    @FXML private TableView<MetricRow> workModeTable;
+    @FXML private TableColumn<MetricRow, String> modeRankCol;
+    @FXML private TableColumn<MetricRow, String> modeMetricCol;
+    @FXML private TableColumn<MetricRow, String> modeCountCol;
 
     private final DatabaseService databaseService = DatabaseService.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setupTables();
         refreshSnapshot();
     }
 
@@ -49,9 +66,7 @@ public class AdminDashboardController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/landing.fxml"));
         Parent root = loader.load();
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 1200, 780);
-        scene.getStylesheets().add(org.kordamp.bootstrapfx.BootstrapFX.bootstrapFXStylesheet());
-        stage.setScene(scene);
+        SceneNavigator.setScenePreservingWindow(stage, root);
         stage.show();
     }
 
@@ -61,7 +76,7 @@ public class AdminDashboardController implements Initializable {
         activeLabel.setText(String.valueOf(snapshot.getActiveUsers()));
         shortlistedLabel.setText(String.valueOf(snapshot.getShortlistedCandidates()));
         candidateCountLabel.setText(String.valueOf(snapshot.getTotalCandidates()));
-        recruiterCountLabel.setText(String.valueOf(snapshot.getTotalRecruiters()));
+        recruiterCountLabel.setText("Recruiters: " + snapshot.getTotalRecruiters());
 
         double activeRate = snapshot.getSignedUpUsers() == 0
             ? 0.0
@@ -71,18 +86,47 @@ public class AdminDashboardController implements Initializable {
             : (snapshot.getShortlistedCandidates() * 100.0 / snapshot.getSignedUpUsers());
         conversionLabel.setText(String.format("Active %.1f%% -> Shortlisted %.1f%%", activeRate, shortlistRate));
 
-        topSkillsArea.setText(formatRankedMap(snapshot.getTopCandidateSkills()));
-        demandSkillsArea.setText(formatRankedMap(snapshot.getMarketDemandSkills()));
-        workModeDemandArea.setText(formatRankedMap(snapshot.getWorkModeDemand()));
+        topSkillsTable.setItems(toRows(snapshot.getTopCandidateSkills()));
+        demandSkillsTable.setItems(toRows(snapshot.getMarketDemandSkills()));
+        workModeTable.setItems(toRows(snapshot.getWorkModeDemand()));
+
         statusLabel.setText("Analytics refreshed.");
     }
 
-    private String formatRankedMap(Map<String, Long> data) {
+    private void setupTables() {
+        setupTable(topRankCol, topMetricCol, topCountCol);
+        setupTable(demandRankCol, demandMetricCol, demandCountCol);
+        setupTable(modeRankCol, modeMetricCol, modeCountCol);
+    }
+
+    private void setupTable(
+        TableColumn<MetricRow, String> rankCol,
+        TableColumn<MetricRow, String> metricCol,
+        TableColumn<MetricRow, String> countCol
+    ) {
+        rankCol.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().rank())));
+        metricCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().metric()));
+        countCol.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().count())));
+    }
+
+    private ObservableList<MetricRow> toRows(Map<String, Long> data) {
         if (data == null || data.isEmpty()) {
-            return "No data available.";
+            return FXCollections.observableArrayList(new MetricRow(1, "No data available", 0L));
         }
-        return data.entrySet().stream()
-            .map(entry -> entry.getKey() + " : " + entry.getValue())
-            .collect(Collectors.joining("\n"));
+
+        List<Map.Entry<String, Long>> sorted = data.entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder())
+                .thenComparing(Map.Entry.comparingByKey()))
+            .toList();
+
+        ObservableList<MetricRow> rows = FXCollections.observableArrayList();
+        for (int i = 0; i < sorted.size(); i++) {
+            Map.Entry<String, Long> entry = sorted.get(i);
+            rows.add(new MetricRow(i + 1, entry.getKey(), entry.getValue()));
+        }
+        return rows;
+    }
+
+    private record MetricRow(int rank, String metric, long count) {
     }
 }

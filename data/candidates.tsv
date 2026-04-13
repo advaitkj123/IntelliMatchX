@@ -1,0 +1,52 @@
+email	name	desiredRole	availabilityWeeks	skills
+candidate1@maildemo.com	Aarav Sharma	Computer Science Undergraduate - Backend Focus	10	java:0.56|spring boot:0.61|sql:0.66|git:0.71|docker:0.76
+candidate2@maildemo.com	Emma Wilson	Statistics Graduate - Data Science Track	11	python:0.61|machine learning:0.66|pandas:0.71|numpy:0.76|sql:0.81
+candidate3@maildemo.com	Noah Garcia	Design Student Transitioning to Frontend Engineering	12	react:0.66|javascript:0.71|css:0.76|html:0.81|figma:0.86
+candidate4@maildemo.com	Sophia Brown	Mechanical Engineer Upskilling in Cloud DevOps	13	aws:0.71|linux:0.76|docker:0.81|terraform:0.86|python:0.91
+candidate5@maildemo.com	Ishan Mehta	Finance Graduate Learning Product Analytics	14	sql:0.76|excel:0.81|tableau:0.86|python:0.91|statistics:0.56
+candidate6@maildemo.com	Maya Singh	Electronics Student Interested in Embedded & Mobile	15	c++:0.81|kotlin:0.86|android:0.91|git:0.56|rest api:0.61
+candidate7@maildemo.com	Rahul Verma	Cybersecurity Enthusiast with Lab Experience	16	network security:0.86|linux:0.91|python:0.56|wireshark:0.61|cloud security:0.66
+candidate8@maildemo.com	Aisha Khan	Bootcamp Graduate - Full Stack JavaScript	17	node.js:0.91|react:0.56|javascript:0.61|mongodb:0.66|git:0.71
+candidate9@maildemo.com	Kunal Desai	Mathematics Major Moving into AI Engineering	10	python:0.56|machine learning:0.61|tensorflow:0.66|statistics:0.71|sql:0.76
+candidate10@maildemo.com	Priya Nair	Information Systems Student - QA Automation	11	selenium:0.61|java:0.66|api testing:0.71|postman:0.76|git:0.81
+candidate11@maildemo.com	Arjun Rao	Computer Science Undergraduate - Backend Focus	12	java:0.66|spring boot:0.71|sql:0.76|git:0.81|docker:0.86
+candidate12@maildemo.com	Neha Kapoor	Statistics Graduate - Data Science Track	13	python:0.71|machine learning:0.76|pandas:0.81|numpy:0.86|sql:0.91
+candidate13@maildemo.com	Kabir Joshi	Design Student Transitioning to Frontend Engineering	14	react:0.76|javascript:0.81|css:0.86|html:0.91|figma:0.56
+candidate14@maildemo.com	Saanvi Iyer	Mechanical Engineer Upskilling in Cloud DevOps	15	aws:0.81|linux:0.86|docker:0.91|terraform:0.56|python:0.61
+candidate15@maildemo.com	Rohan Banerjee	Finance Graduate Learning Product Analytics	16	sql:0.86|excel:0.91|tableau:0.56|python:0.61|statistics:0.66
+candidate16@maildemo.com	Ananya Das	Electronics Student Interested in Embedded & Mobile	17	c++:0.91|kotlin:0.56|android:0.61|git:0.66|rest api:0.71
+candidate17@maildemo.com	Vihaan Menon	Cybersecurity Enthusiast with Lab Experience	10	network security:0.56|linux:0.61|python:0.66|wireshark:0.71|cloud security:0.76
+candidate18@maildemo.com	Zara Ali	Bootcamp Graduate - Full Stack JavaScript	11	node.js:0.61|react:0.66|javascript:0.71|mongodb:0.76|git:0.81
+candidate19@maildemo.com	Aryan Malhotra	Mathematics Major Moving into AI Engineering	12	python:0.66|machine learning:0.71|tensorflow:0.76|statistics:0.81|sql:0.86
+candidate20@maildemo.com	Ira Chawla	Information Systems Student - QA Automation	13	selenium:0.71|java:0.76|api testing:0.81|postman:0.86|git:0.91
+candidate21@maildemo.com	Leo Martin	Computer Science Undergraduate - Backend Focus	14	java:0.76|spring boot:0.81|sql:0.86|git:0.91|docker:0.56
+candidate22@maildemo.com	Mila Anderson	Statistics Graduate - Data Science Track	15	python:0.81|machine learning:0.86|pandas:0.91|numpy:0.56|sql:0.61
+candidate23@maildemo.com	Omar Hassan	Design Student Transitioning to Frontend Engineering	16	react:0.86|javascript:0.91|css:0.56|html:0.61|figma:0.66
+candidate24@maildemo.com	Nina D'Souza	Mechanical Engineer Upskilling in Cloud DevOps	17	aws:0.91|linux:0.56|docker:0.61|terraform:0.66|python:0.71
+candidate25@maildemo.com	Aditya Kulkarni	Finance Graduate Learning Product Analytics	10	sql:0.56|excel:0.61|tableau:0.66|python:0.71|statistics:0.76
+candidate26@maildemo.com	Sara Thomas	Electronics Student Interested in Embedded & Mobile	11	c++:0.61|kotlin:0.66|android:0.71|git:0.76|rest api:0.81
+candidate27@maildemo.com	Rajat Bhatia	Cybersecurity Enthusiast with Lab Experience	12	network security:0.66|linux:0.71|python:0.76|wireshark:0.81|cloud security:0.86
+candidate28@maildemo.com	Ishita Gupta	Bootcamp Graduate - Full Stack JavaScript	13	node.js:0.71|react:0.76|javascript:0.81|mongodb:0.86|git:0.91
+candidate29@maildemo.com	Devansh Arora	Mathematics Major Moving into AI Engineering	14	python:0.76|machine learning:0.81|tensorflow:0.86|statistics:0.91|sql:0.56
+candidate30@maildemo.com	Tara Mishra	Information Systems Student - QA Automation	15	selenium:0.81|java:0.86|api testing:0.91|postman:0.56|git:0.61
+candidate31@maildemo.com	Aiden Parker	Computer Science Undergraduate - Backend Focus	16	java:0.86|spring boot:0.91|sql:0.56|git:0.61|docker:0.66
+candidate32@maildemo.com	Isla Morgan	Statistics Graduate - Data Science Track	17	python:0.91|machine learning:0.56|pandas:0.61|numpy:0.66|sql:0.71
+candidate33@maildemo.com	Yusuf Rahman	Design Student Transitioning to Frontend Engineering	10	react:0.56|javascript:0.61|css:0.66|html:0.71|figma:0.76
+candidate34@maildemo.com	Kiara Sen	Mechanical Engineer Upskilling in Cloud DevOps	11	aws:0.61|linux:0.66|docker:0.71|terraform:0.76|python:0.81
+candidate35@maildemo.com	Nikhil Jain	Finance Graduate Learning Product Analytics	12	sql:0.66|excel:0.71|tableau:0.76|python:0.81|statistics:0.86
+candidate36@maildemo.com	Pooja Sethi	Electronics Student Interested in Embedded & Mobile	13	c++:0.71|kotlin:0.76|android:0.81|git:0.86|rest api:0.91
+candidate37@maildemo.com	Reyansh Roy	Cybersecurity Enthusiast with Lab Experience	14	network security:0.76|linux:0.81|python:0.86|wireshark:0.91|cloud security:0.56
+candidate38@maildemo.com	Meera Pillai	Bootcamp Graduate - Full Stack JavaScript	15	node.js:0.81|react:0.86|javascript:0.91|mongodb:0.56|git:0.61
+candidate39@maildemo.com	Veer Khurana	Mathematics Major Moving into AI Engineering	16	python:0.86|machine learning:0.91|tensorflow:0.56|statistics:0.61|sql:0.66
+candidate40@maildemo.com	Riya Patel	Information Systems Student - QA Automation	17	selenium:0.91|java:0.56|api testing:0.61|postman:0.66|git:0.71
+candidate41@maildemo.com	Ethan Reed	Computer Science Undergraduate - Backend Focus	10	java:0.56|spring boot:0.61|sql:0.66|git:0.71|docker:0.76
+candidate42@maildemo.com	Ava Miller	Statistics Graduate - Data Science Track	11	python:0.61|machine learning:0.66|pandas:0.71|numpy:0.76|sql:0.81
+candidate43@maildemo.com	Hugo Fernandes	Design Student Transitioning to Frontend Engineering	12	react:0.66|javascript:0.71|css:0.76|html:0.81|figma:0.86
+candidate44@maildemo.com	Anika Bose	Mechanical Engineer Upskilling in Cloud DevOps	13	aws:0.71|linux:0.76|docker:0.81|terraform:0.86|python:0.91
+candidate45@maildemo.com	Siddharth Ghosh	Finance Graduate Learning Product Analytics	14	sql:0.76|excel:0.81|tableau:0.86|python:0.91|statistics:0.56
+candidate46@maildemo.com	Fatima Noor	Electronics Student Interested in Embedded & Mobile	15	c++:0.81|kotlin:0.86|android:0.91|git:0.56|rest api:0.61
+candidate47@maildemo.com	Krish Bansal	Cybersecurity Enthusiast with Lab Experience	16	network security:0.86|linux:0.91|python:0.56|wireshark:0.61|cloud security:0.66
+candidate48@maildemo.com	Lavanya Reddy	Bootcamp Graduate - Full Stack JavaScript	17	node.js:0.91|react:0.56|javascript:0.61|mongodb:0.66|git:0.71
+candidate49@maildemo.com	Ryan Campbell	Mathematics Major Moving into AI Engineering	10	python:0.56|machine learning:0.61|tensorflow:0.66|statistics:0.71|sql:0.76
+candidate50@maildemo.com	Aanya Bhatt	Information Systems Student - QA Automation	11	selenium:0.61|java:0.66|api testing:0.71|postman:0.76|git:0.81
+chinmaye@gmail.com	Chinmaye Sharma	CS Student	12	sql:0.78|python:0.78|java:0.78|c#:0.78|c:0.78|game dev:0.78

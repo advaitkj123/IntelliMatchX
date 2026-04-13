@@ -1,5 +1,6 @@
 package com.intellimatch;
 
+import com.intellimatch.ui.WindowManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,13 +25,12 @@ public class App extends Application {
 
         Parent root = FXMLLoader.load(fxmlUrl);
 
-        Scene scene = new Scene(root, 1200, 780);
+        Scene scene = new Scene(root);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
         primaryStage.setTitle("IntelliMatch-X - Automated Bi-Directional Internship Matching System");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(1000);
-        primaryStage.setMinHeight(640);
+        WindowManager.configureAndRestore(primaryStage);
         primaryStage.show();
     }
 }

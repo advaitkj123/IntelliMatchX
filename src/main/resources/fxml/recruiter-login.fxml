@@ -37,23 +37,23 @@
                     <Label text="Login or sign up to add required skills and discover candidate matches."
                            styleClass="auth-subtitle"/>
 
-                    <TabPane tabClosingPolicy="UNAVAILABLE">
+                    <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="auth-tabs">
                         <tabs>
                             <Tab text="Login">
-                                <VBox spacing="10">
+                                <VBox spacing="10" styleClass="auth-form-section">
                                     <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
                                     <Label text="Gmail / Email" styleClass="control-label"/>
                                     <TextField fx:id="loginEmailField" promptText="recruiter email" styleClass="auth-input"/>
                                     <Label text="Password" styleClass="control-label"/>
                                     <PasswordField fx:id="loginPasswordField" promptText="password" styleClass="auth-input"/>
-                                    <Button text="Login"
+                                        <Button text="Sign In to Recruiter Portal"
                                             onAction="#onLogin"
-                                            prefWidth="220"
-                                            styleClass="btn,btn-primary"/>
+                                            prefWidth="300"
+                                            styleClass="auth-action-btn,auth-action-primary"/>
                                 </VBox>
                             </Tab>
                             <Tab text="Sign Up">
-                                <VBox spacing="10">
+                                <VBox spacing="10" styleClass="auth-form-section">
                                     <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
                                     <Label text="Recruiter Name" styleClass="control-label"/>
                                     <TextField fx:id="signUpRecruiterNameField" promptText="full name" styleClass="auth-input"/>
@@ -67,8 +67,8 @@
                                     <PasswordField fx:id="signUpPasswordField" promptText="minimum 6 characters" styleClass="auth-input"/>
                                     <Button text="Create Recruiter Account"
                                             onAction="#onSignUp"
-                                            prefWidth="250"
-                                            styleClass="btn,btn-success"/>
+                                            prefWidth="300"
+                                            styleClass="btn,btn-success,auth-action-btn,auth-action-secondary"/>
                                 </VBox>
                             </Tab>
                         </tabs>

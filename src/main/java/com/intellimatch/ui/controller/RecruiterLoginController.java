@@ -1,6 +1,7 @@
 package com.intellimatch.ui.controller;
 
 import com.intellimatch.model.UserAccount;
+import com.intellimatch.ui.SceneNavigator;
 import com.intellimatch.service.AuthService;
 import com.intellimatch.service.DatabaseService;
 import com.intellimatch.service.SessionManager;
@@ -8,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -86,12 +86,7 @@ public class RecruiterLoginController {
         Parent root = loader.load();
 
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 1200, 780);
-        scene.getStylesheets().add(
-            org.kordamp.bootstrapfx.BootstrapFX.bootstrapFXStylesheet()
-        );
-
-        stage.setScene(scene);
+        SceneNavigator.setScenePreservingWindow(stage, root);
         stage.show();
     }
 

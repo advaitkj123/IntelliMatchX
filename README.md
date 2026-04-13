@@ -1,4 +1,4 @@
-# IntelliMatch-X
+# IntelliMatch-Xs
 ## Automated Bi-Directional Internship Matching System
 
 ---

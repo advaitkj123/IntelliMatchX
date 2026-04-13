@@ -3,6 +3,7 @@ package com.intellimatch.ui.controller;
 import com.intellimatch.model.Applicant;
 import com.intellimatch.model.CompanySkillMatchResult;
 import com.intellimatch.model.UserRole;
+import com.intellimatch.ui.SceneNavigator;
 import com.intellimatch.service.DatabaseService;
 import com.intellimatch.service.MatchingService;
 import com.intellimatch.service.SessionManager;
@@ -13,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -171,9 +171,7 @@ public class CandidateDashboardController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 1200, 780);
-        scene.getStylesheets().add(org.kordamp.bootstrapfx.BootstrapFX.bootstrapFXStylesheet());
-        stage.setScene(scene);
+        SceneNavigator.setScenePreservingWindow(stage, root);
         stage.show();
     }
 }

@@ -34,18 +34,27 @@
 
                     <Button text="Recruiter"
                             onAction="#onRecruiterSelected"
+                            onMouseClicked="#onRecruiterSecretTap"
                             prefWidth="260" prefHeight="46"
                             styleClass="btn,btn-primary,role-button"/>
 
                     <Button text="Applicant"
                             onAction="#onApplicantSelected"
+                            onMouseClicked="#onApplicantSecretTap"
                             prefWidth="260" prefHeight="46"
                             styleClass="btn,btn-success,role-button"/>
 
-                    <Button text="Admin Analytics"
+                        <Button fx:id="adminButton"
+                            text="Admin Analytics"
                             onAction="#onAdminSelected"
                             prefWidth="260" prefHeight="46"
-                            styleClass="btn,btn-info,role-button"/>
+                            styleClass="btn,btn-info,role-button"
+                            managed="false"
+                            visible="false"/>
+
+                        <Label fx:id="unlockHintLabel"
+                           text=""
+                           styleClass="auth-subtitle"/>
                 </VBox>
             </children>
         </VBox>

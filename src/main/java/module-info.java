@@ -5,6 +5,7 @@ module com.intellimatch {
     requires javafx.swing;
     requires jdk.jsobject;
     requires java.logging;
+    requires java.prefs;
     requires org.kordamp.bootstrapfx.core;
 
     opens com.intellimatch to javafx.fxml;

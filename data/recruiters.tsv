@@ -1,0 +1,52 @@
+email	recruiterName	company	internshipTitle	durationWeeks	requiredSkills	roleLevel	location	stipend	startDate	workMode
+talent1@google.com	Sarah Lee	Google	Backend Engineering Intern	10	java:0.68|spring boot:0.73|sql:0.78|docker:0.83|git:0.88	Intern	San Francisco, US	$1200/month	2026-04-01	Remote
+talent2@microsoft.com	James Wong	Microsoft	Machine Learning Intern	12	python:0.73|machine learning:0.78|pandas:0.83|tensorflow:0.88|sql:0.93	Entry Level	New York, US	$1500/month	2026-05-01	Hybrid
+talent3@amazon.com	Linda Brooks	Amazon	Frontend Engineering Intern	14	react:0.78|javascript:0.83|typescript:0.88|css:0.93|git:0.95	Associate	Seattle, US	$1800/month	2026-06-01	Onsite
+talent4@apple.com	Mark Nguyen	Apple	DevOps & Cloud Intern	16	aws:0.83|kubernetes:0.88|docker:0.93|terraform:0.95|linux:0.95	Graduate	Austin, US	$2100/month	2026-07-01	Remote
+talent5@meta.com	Ava Thompson	Meta	Data Engineering Intern	10	python:0.88|spark:0.93|sql:0.95|airflow:0.95|aws:0.68	Intern	Boston, US	$2400/month	2026-08-01	Hybrid
+talent6@netflix.com	Noah Patel	Netflix	Mobile App Intern	12	kotlin:0.93|android:0.95|rest api:0.95|git:0.68|firebase:0.73	Entry Level	Toronto, CA	$2700/month	2026-09-01	Onsite
+talent7@adobe.com	Mia Rodriguez	Adobe	Security Engineering Intern	14	network security:0.95|linux:0.95|python:0.68|siem:0.73|cloud security:0.78	Associate	London, UK	$3000/month	2026-10-01	Remote
+talent8@salesforce.com	Ethan Kim	Salesforce	Product Analytics Intern	16	sql:0.95|tableau:0.68|python:0.73|statistics:0.78|excel:0.83	Graduate	Berlin, DE	$1200/month	2026-11-01	Hybrid
+talent9@oracle.com	Sofia Ahmed	Oracle	Full Stack Intern	10	java:0.68|react:0.73|spring boot:0.78|javascript:0.83|sql:0.88	Intern	Dublin, IE	$1500/month	2026-12-01	Onsite
+talent10@ibm.com	Liam Carter	IBM	QA Automation Intern	12	selenium:0.73|java:0.78|api testing:0.83|testng:0.88|git:0.93	Entry Level	Singapore, SG	$1800/month	2026-04-01	Remote
+talent11@intel.com	Olivia Scott	Intel	Backend Engineering Intern	14	java:0.78|spring boot:0.83|sql:0.88|docker:0.93|git:0.95	Associate	Bengaluru, IN	$2100/month	2026-05-01	Hybrid
+talent12@nvidia.com	Mason Hall	NVIDIA	Machine Learning Intern	16	python:0.83|machine learning:0.88|pandas:0.93|tensorflow:0.95|sql:0.95	Graduate	Hyderabad, IN	$2400/month	2026-06-01	Onsite
+talent13@qualcomm.com	Isabella Young	Qualcomm	Frontend Engineering Intern	10	react:0.88|javascript:0.93|typescript:0.95|css:0.95|git:0.68	Intern	Mumbai, IN	$2700/month	2026-07-01	Remote
+talent14@cisco.com	Lucas Turner	Cisco	DevOps & Cloud Intern	12	aws:0.93|kubernetes:0.95|docker:0.95|terraform:0.68|linux:0.73	Entry Level	Sydney, AU	$3000/month	2026-08-01	Hybrid
+talent15@sap.com	Amelia Collins	SAP	Data Engineering Intern	14	python:0.95|spark:0.95|sql:0.68|airflow:0.73|aws:0.78	Associate	Amsterdam, NL	$1200/month	2026-09-01	Onsite
+talent16@accenture.com	Elijah Foster	Accenture	Mobile App Intern	16	kotlin:0.95|android:0.68|rest api:0.73|git:0.78|firebase:0.83	Graduate	San Francisco, US	$1500/month	2026-10-01	Remote
+talent17@deloitte.com	Charlotte Reed	Deloitte	Security Engineering Intern	10	network security:0.68|linux:0.73|python:0.78|siem:0.83|cloud security:0.88	Intern	New York, US	$1800/month	2026-11-01	Hybrid
+talent18@pwc.com	Harper Bell	PwC	Product Analytics Intern	12	sql:0.73|tableau:0.78|python:0.83|statistics:0.88|excel:0.93	Entry Level	Seattle, US	$2100/month	2026-12-01	Onsite
+talent19@goldmansachs.com	Henry Ward	Goldman Sachs	Full Stack Intern	14	java:0.78|react:0.83|spring boot:0.88|javascript:0.93|sql:0.95	Associate	Austin, US	$2400/month	2026-04-01	Remote
+talent20@jpmorganchase.com	Evelyn Simmons	JPMorgan Chase	QA Automation Intern	16	selenium:0.83|java:0.88|api testing:0.93|testng:0.95|git:0.95	Graduate	Boston, US	$2700/month	2026-05-01	Hybrid
+talent21@morganstanley.com	Benjamin Cooper	Morgan Stanley	Backend Engineering Intern	10	java:0.88|spring boot:0.93|sql:0.95|docker:0.95|git:0.68	Intern	Toronto, CA	$3000/month	2026-06-01	Onsite
+talent22@uber.com	Abigail Morris	Uber	Machine Learning Intern	12	python:0.93|machine learning:0.95|pandas:0.95|tensorflow:0.68|sql:0.73	Entry Level	London, UK	$1200/month	2026-07-01	Remote
+talent23@airbnb.com	Logan Powell	Airbnb	Frontend Engineering Intern	14	react:0.95|javascript:0.95|typescript:0.68|css:0.73|git:0.78	Associate	Berlin, DE	$1500/month	2026-08-01	Hybrid
+talent24@stripe.com	Emily Kelly	Stripe	DevOps & Cloud Intern	16	aws:0.95|kubernetes:0.68|docker:0.73|terraform:0.78|linux:0.83	Graduate	Dublin, IE	$1800/month	2026-09-01	Onsite
+talent25@paypal.com	Daniel Barnes	PayPal	Data Engineering Intern	10	python:0.68|spark:0.73|sql:0.78|airflow:0.83|aws:0.88	Intern	Singapore, SG	$2100/month	2026-10-01	Remote
+talent26@spotify.com	Grace Rivera	Spotify	Mobile App Intern	12	kotlin:0.73|android:0.78|rest api:0.83|git:0.88|firebase:0.93	Entry Level	Bengaluru, IN	$2400/month	2026-11-01	Hybrid
+talent27@atlassian.com	Matthew Price	Atlassian	Security Engineering Intern	14	network security:0.78|linux:0.83|python:0.88|siem:0.93|cloud security:0.95	Associate	Hyderabad, IN	$2700/month	2026-12-01	Onsite
+talent28@shopify.com	Chloe Bennett	Shopify	Product Analytics Intern	16	sql:0.83|tableau:0.88|python:0.93|statistics:0.95|excel:0.95	Graduate	Mumbai, IN	$3000/month	2026-04-01	Remote
+talent29@vmware.com	Sebastian Ross	VMware	Full Stack Intern	10	java:0.88|react:0.93|spring boot:0.95|javascript:0.95|sql:0.68	Intern	Sydney, AU	$1200/month	2026-05-01	Hybrid
+talent30@servicenow.com	Lily Jenkins	ServiceNow	QA Automation Intern	12	selenium:0.93|java:0.95|api testing:0.95|testng:0.68|git:0.73	Entry Level	Amsterdam, NL	$1500/month	2026-06-01	Onsite
+talent31@snowflake.com	Aiden Hughes	Snowflake	Backend Engineering Intern	14	java:0.95|spring boot:0.95|sql:0.68|docker:0.73|git:0.78	Associate	San Francisco, US	$1800/month	2026-07-01	Remote
+talent32@databricks.com	Scarlett Fisher	Databricks	Machine Learning Intern	16	python:0.95|machine learning:0.68|pandas:0.73|tensorflow:0.78|sql:0.83	Graduate	New York, US	$2100/month	2026-08-01	Hybrid
+talent33@palantir.com	Jacob Sanders	Palantir	Frontend Engineering Intern	10	react:0.68|javascript:0.73|typescript:0.78|css:0.83|git:0.88	Intern	Seattle, US	$2400/month	2026-09-01	Onsite
+talent34@tesla.com	Aria Bailey	Tesla	DevOps & Cloud Intern	12	aws:0.73|kubernetes:0.78|docker:0.83|terraform:0.88|linux:0.93	Entry Level	Austin, US	$2700/month	2026-10-01	Remote
+talent35@spacex.com	Michael Perry	SpaceX	Data Engineering Intern	14	python:0.78|spark:0.83|sql:0.88|airflow:0.93|aws:0.95	Associate	Boston, US	$3000/month	2026-11-01	Hybrid
+talent36@samsung.com	Nora Long	Samsung	Mobile App Intern	16	kotlin:0.83|android:0.88|rest api:0.93|git:0.95|firebase:0.95	Graduate	Toronto, CA	$1200/month	2026-12-01	Onsite
+talent37@siemens.com	David Cox	Siemens	Security Engineering Intern	10	network security:0.88|linux:0.93|python:0.95|siem:0.95|cloud security:0.68	Intern	London, UK	$1500/month	2026-04-01	Remote
+talent38@bosch.com	Ella Howard	Bosch	Product Analytics Intern	12	sql:0.93|tableau:0.95|python:0.95|statistics:0.68|excel:0.73	Entry Level	Berlin, DE	$1800/month	2026-05-01	Hybrid
+talent39@shell.com	Joseph Myers	Shell	Full Stack Intern	14	java:0.95|react:0.95|spring boot:0.68|javascript:0.73|sql:0.78	Associate	Dublin, IE	$2100/month	2026-06-01	Onsite
+talent40@unilever.com	Zoey Watson	Unilever	QA Automation Intern	16	selenium:0.95|java:0.68|api testing:0.73|testng:0.78|git:0.83	Graduate	Singapore, SG	$2400/month	2026-07-01	Remote
+talent41@proctergamble.com	Samuel Brooks	Procter & Gamble	Backend Engineering Intern	10	java:0.68|spring boot:0.73|sql:0.78|docker:0.83|git:0.88	Intern	Bengaluru, IN	$2700/month	2026-08-01	Hybrid
+talent42@thecocacolacompany.com	Hannah Griffin	The Coca-Cola Company	Machine Learning Intern	12	python:0.73|machine learning:0.78|pandas:0.83|tensorflow:0.88|sql:0.93	Entry Level	Hyderabad, IN	$3000/month	2026-09-01	Onsite
+talent43@pepsico.com	Owen Russell	PepsiCo	Frontend Engineering Intern	14	react:0.78|javascript:0.83|typescript:0.88|css:0.93|git:0.95	Associate	Mumbai, IN	$1200/month	2026-10-01	Remote
+talent44@nike.com	Avery Diaz	Nike	DevOps & Cloud Intern	16	aws:0.83|kubernetes:0.88|docker:0.93|terraform:0.95|linux:0.95	Graduate	Sydney, AU	$1500/month	2026-11-01	Hybrid
+talent45@walmart.com	Levi Hayes	Walmart	Data Engineering Intern	10	python:0.88|spark:0.93|sql:0.95|airflow:0.95|aws:0.68	Intern	Amsterdam, NL	$1800/month	2026-12-01	Onsite
+talent46@target.com	Penelope Foster	Target	Mobile App Intern	12	kotlin:0.93|android:0.95|rest api:0.95|git:0.68|firebase:0.73	Entry Level	San Francisco, US	$2100/month	2026-04-01	Remote
+talent47@bookingcom.com	Wyatt Graham	Booking.com	Security Engineering Intern	14	network security:0.95|linux:0.95|python:0.68|siem:0.73|cloud security:0.78	Associate	New York, US	$2400/month	2026-05-01	Hybrid
+talent48@bytedance.com	Riley Stone	ByteDance	Product Analytics Intern	16	sql:0.95|tableau:0.68|python:0.73|statistics:0.78|excel:0.83	Graduate	Seattle, US	$2700/month	2026-06-01	Onsite
+talent49@zoom.com	Julian Cooper	Zoom	Full Stack Intern	10	java:0.68|react:0.73|spring boot:0.78|javascript:0.83|sql:0.88	Intern	Austin, US	$3000/month	2026-07-01	Remote
+talent50@linkedin.com	Layla Price	LinkedIn	QA Automation Intern	12	selenium:0.73|java:0.78|api testing:0.83|testng:0.88|git:0.93	Entry Level	Boston, US	$1200/month	2026-08-01	Hybrid
+gamer@gmail.com	Chinmaye Sharma	Game Creators	Open Internship Role	12	game dev:0.82	Intern	Not specified	Not specified	Flexible	Hybrid
