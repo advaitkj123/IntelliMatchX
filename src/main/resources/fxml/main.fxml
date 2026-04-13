@@ -50,6 +50,19 @@
                                 styleClass="btn,btn-info"/>
                     </HBox>
 
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Candidate Name:" styleClass="control-label"/>
+                        <TextField fx:id="candidateNameField" prefWidth="180" promptText="e.g., Tanay"/>
+                        <Label text="Key Skills:" styleClass="control-label"/>
+                        <TextField fx:id="candidateSkillsField"
+                                   prefWidth="420"
+                                   promptText="comma-separated (e.g., java, spring boot, sql)"
+                                   HBox.hgrow="ALWAYS"/>
+                        <Button text="Find Company Matches"
+                                onAction="#onFindCompaniesForCandidateSkills"
+                                styleClass="btn,btn-warning"/>
+                    </HBox>
+
                     <!-- Results Table -->
                     <TableView fx:id="matchTableView" VBox.vgrow="ALWAYS">
                         <columns>
@@ -60,7 +73,7 @@
                             <TableColumn fx:id="colMatchedSkills" text="Matched Skills" prefWidth="320"/>
                         </columns>
                         <placeholder>
-                            <Label text="Click 'Run Full Bi-Directional Match' to start" styleClass="placeholder-label"/>
+                            <Label text="Run a match flow or search by candidate name + skills" styleClass="placeholder-label"/>
                         </placeholder>
                     </TableView>
 
