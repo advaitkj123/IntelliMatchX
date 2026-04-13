@@ -2,6 +2,7 @@ package com.intellimatch.service;
 
 import com.intellimatch.engine.MatchingEngine;
 import com.intellimatch.model.Applicant;
+import com.intellimatch.model.CompanySkillMatchResult;
 import com.intellimatch.model.MatchResult;
 import com.intellimatch.model.Recruiter;
 import com.intellimatch.observer.MatchEventBus;
@@ -11,6 +12,7 @@ import com.intellimatch.strategy.MatchingStrategy;
 import com.intellimatch.strategy.WeightedSkillGraphStrategy;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Service facade that wires together the engine, observers, and data seed.
@@ -46,6 +48,36 @@ public class MatchingService {
 
     public List<MatchResult> getTopCandidatesForRecruiter(Recruiter recruiter, int topN) {
         return engine.getTopCandidatesForRecruiter(recruiter, applicants, topN);
+    }
+
+    /**
+     * New backend endpoint-style method:
+     * candidate provides name and key skills, and receives ranked company matches
+     * based on exact and similar skill requirements.
+     */
+    public List<CompanySkillMatchResult> findCompaniesByCandidateSkills(
+            String candidateName,
+            List<String> keySkills,
+            int topN) {
+        if (candidateName == null || candidateName.isBlank()) {
+            throw new IllegalArgumentException("Candidate name cannot be blank");
+        }
+        if (keySkills == null || keySkills.isEmpty()) {
+            throw new IllegalArgumentException("At least one key skill is required");
+        }
+
+        List<String> cleanedSkills = keySkills.stream()
+            .filter(Objects::nonNull)
+            .map(String::trim)
+            .filter(skill -> !skill.isBlank())
+            .toList();
+
+        if (cleanedSkills.isEmpty()) {
+            throw new IllegalArgumentException("At least one non-blank key skill is required");
+        }
+
+        int boundedTopN = Math.max(1, topN);
+        return engine.findCompaniesForCandidateSkills(candidateName.trim(), cleanedSkills, recruiters, boundedTopN);
     }
 
     public void setWeightedStrategy() {
