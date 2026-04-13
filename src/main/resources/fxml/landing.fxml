@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.intellimatch.ui.controller.LandingController"
+            stylesheets="@../styles/main.css"
+            prefWidth="1200" prefHeight="780"
+            styleClass="auth-page">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="12">
+            <padding><Insets top="10" bottom="10" left="18" right="18"/></padding>
+            <Label text="IntelliMatch-X" styleClass="app-title"/>
+            <Label text="Automated Bi-Directional Internship Matching" styleClass="app-subtitle"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="22" styleClass="auth-shell">
+            <children>
+                <VBox alignment="CENTER" spacing="10" styleClass="auth-card" maxWidth="480">
+                    <padding><Insets top="36" right="36" bottom="36" left="36"/></padding>
+
+                    <Label text="Who Are You?" styleClass="auth-title"/>
+                    <Label text="Choose your portal to continue into IntelliMatch-X." styleClass="auth-subtitle"/>
+
+                    <Button text="Recruiter"
+                            onAction="#onRecruiterSelected"
+                            prefWidth="260" prefHeight="46"
+                            styleClass="btn,btn-primary,role-button"/>
+
+                    <Button text="Applicant"
+                            onAction="#onApplicantSelected"
+                            prefWidth="260" prefHeight="46"
+                            styleClass="btn,btn-success,role-button"/>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>
