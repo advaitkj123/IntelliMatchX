@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.intellimatch.ui.controller.RecruiterLoginController"
+            stylesheets="@../styles/main.css"
+            prefWidth="1200" prefHeight="780"
+            styleClass="auth-page">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="12">
+            <padding><Insets top="10" bottom="10" left="18" right="18"/></padding>
+            <Label text="IntelliMatch-X" styleClass="app-title"/>
+            <Label text="Recruiter Portal" styleClass="app-subtitle"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" styleClass="auth-shell">
+            <children>
+                <VBox spacing="14" styleClass="auth-card" maxWidth="440">
+                    <padding><Insets top="32" right="32" bottom="32" left="32"/></padding>
+
+                    <Label text="Recruiter Login" styleClass="auth-title"/>
+                    <Label text="Sign in to manage postings and discover candidates." styleClass="auth-subtitle"/>
+
+                    <Label text="Email" styleClass="control-label"/>
+                    <TextField promptText="Enter recruiter email" styleClass="auth-input"/>
+
+                    <Label text="Password" styleClass="control-label"/>
+                    <PasswordField promptText="Enter password" styleClass="auth-input"/>
+
+                    <HBox spacing="12">
+                        <Button text="Back"
+                                onAction="#onBack"
+                                prefWidth="140"
+                                styleClass="btn,btn-default"/>
+
+                        <Button text="Login"
+                                onAction="#onLogin"
+                                prefWidth="220"
+                                styleClass="btn,btn-primary"/>
+                    </HBox>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>

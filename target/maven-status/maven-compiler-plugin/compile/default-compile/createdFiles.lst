@@ -1,4 +1,3 @@
-com\intellimatch\factory\PersonFactory.class
 com\intellimatch\model\Applicant.class
 com\intellimatch\model\Skill.class
 com\intellimatch\observer\NotificationLogger.class
@@ -6,13 +5,17 @@ com\intellimatch\App.class
 com\intellimatch\service\DataSeedService.class
 com\intellimatch\strategy\ExactMatchStrategy.class
 com\intellimatch\ui\controller\MainController.class
-com\intellimatch\model\MatchResult.class
-com\intellimatch\observer\MatchObserver.class
-com\intellimatch\observer\MatchEventBus.class
 module-info.class
-com\intellimatch\strategy\WeightedSkillGraphStrategy.class
 com\intellimatch\model\Recruiter.class
-com\intellimatch\engine\MatchingEngine.class
 com\intellimatch\strategy\MatchingStrategy.class
 com\intellimatch\service\MatchingService.class
 com\intellimatch\model\Person.class
+com\intellimatch\factory\PersonFactory.class
+com\intellimatch\ui\controller\LandingController.class
+com\intellimatch\ui\controller\RecruiterLoginController.class
+com\intellimatch\model\MatchResult.class
+com\intellimatch\observer\MatchObserver.class
+com\intellimatch\observer\MatchEventBus.class
+com\intellimatch\strategy\WeightedSkillGraphStrategy.class
+com\intellimatch\engine\MatchingEngine.class
+com\intellimatch\ui\controller\ApplicantLoginController.class
