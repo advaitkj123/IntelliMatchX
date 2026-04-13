@@ -2,6 +2,7 @@ package com.intellimatch.service;
 
 import com.intellimatch.factory.PersonFactory;
 import com.intellimatch.model.Applicant;
+import com.intellimatch.model.AnalyticsSnapshot;
 import com.intellimatch.model.Recruiter;
 import com.intellimatch.model.Skill;
 import com.intellimatch.model.UserAccount;
@@ -15,11 +16,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,10 +38,14 @@ public class DatabaseService {
     private final Path usersFile = dataDir.resolve("users.tsv");
     private final Path candidatesFile = dataDir.resolve("candidates.tsv");
     private final Path recruitersFile = dataDir.resolve("recruiters.tsv");
+    private final Path userStatsFile = dataDir.resolve("user_stats.tsv");
+    private final Path shortlistsFile = dataDir.resolve("shortlists.tsv");
 
     private final Map<String, UserAccount> accountsByEmail = new LinkedHashMap<>();
     private final Map<String, Applicant> candidatesByEmail = new LinkedHashMap<>();
     private final Map<String, Recruiter> recruitersByEmail = new LinkedHashMap<>();
+    private final Map<String, UserStat> userStatsByEmail = new LinkedHashMap<>();
+    private final List<ShortlistEntry> shortlists = new ArrayList<>();
 
     private final DataSeedService seedService = new DataSeedService();
 
@@ -94,6 +101,7 @@ public class DatabaseService {
         candidatesByEmail.put(normalizedEmail, candidate);
         UserAccount account = new UserAccount(normalizedEmail, hashPassword(password), UserRole.CANDIDATE, name.trim());
         accountsByEmail.put(normalizedEmail, account);
+        userStatsByEmail.put(normalizedEmail, new UserStat(0, 0, 0L));
         persistAll();
         return account;
     }
@@ -130,6 +138,7 @@ public class DatabaseService {
         recruitersByEmail.put(normalizedEmail, recruiter);
         UserAccount account = new UserAccount(normalizedEmail, hashPassword(password), UserRole.RECRUITER, companyName.trim());
         accountsByEmail.put(normalizedEmail, account);
+        userStatsByEmail.put(normalizedEmail, new UserStat(0, 0, 0L));
         persistAll();
         return account;
     }
@@ -157,11 +166,13 @@ public class DatabaseService {
     }
 
     public synchronized void addCandidateSkills(String email, List<String> skills) {
-        Applicant candidate = candidatesByEmail.get(normalizeEmail(email));
+        String normalized = normalizeEmail(email);
+        Applicant candidate = candidatesByEmail.get(normalized);
         if (candidate == null) {
             throw new IllegalArgumentException("Candidate profile not found.");
         }
         toSkillObjects(skills, 0.80).forEach(candidate::addSkill);
+        markActivity(normalized);
         persistAll();
     }
 
@@ -171,18 +182,108 @@ public class DatabaseService {
             throw new IllegalArgumentException("Recruiter profile not found.");
         }
         toSkillObjects(skills, 0.84).forEach(recruiter::addSkill);
+        markActivity(normalizeEmail(email));
         persistAll();
+    }
+
+    public synchronized void updateRecruiterPostingControls(
+            String email,
+            String internshipTitle,
+            String roleLevel,
+            String location,
+            String stipend,
+            String startDate,
+            String workMode) {
+        Recruiter recruiter = recruitersByEmail.get(normalizeEmail(email));
+        if (recruiter == null) {
+            throw new IllegalArgumentException("Recruiter profile not found.");
+        }
+        if (internshipTitle != null && !internshipTitle.isBlank()) recruiter.setInternshipTitle(internshipTitle.trim());
+        if (roleLevel != null && !roleLevel.isBlank()) recruiter.setRoleLevel(roleLevel.trim());
+        if (location != null && !location.isBlank()) recruiter.setLocation(location.trim());
+        if (stipend != null && !stipend.isBlank()) recruiter.setStipend(stipend.trim());
+        if (startDate != null && !startDate.isBlank()) recruiter.setStartDate(startDate.trim());
+        if (workMode != null && !workMode.isBlank()) recruiter.setWorkMode(workMode.trim());
+        markActivity(normalizeEmail(email));
+        persistAll();
+    }
+
+    public synchronized void recordLogin(String email) {
+        String normalized = normalizeEmail(email);
+        UserStat stat = userStatsByEmail.computeIfAbsent(normalized, e -> new UserStat(0, 0, 0L));
+        stat.loginCount++;
+        stat.lastLoginEpochMillis = System.currentTimeMillis();
+        persistAll();
+    }
+
+    public synchronized void recordActivity(String email) {
+        markActivity(normalizeEmail(email));
+        persistAll();
+    }
+
+    public synchronized void shortlistCandidate(String recruiterEmail, String candidateEmail) {
+        String recruiter = normalizeEmail(recruiterEmail);
+        String candidate = normalizeEmail(candidateEmail);
+        if (!recruitersByEmail.containsKey(recruiter)) {
+            throw new IllegalArgumentException("Recruiter profile not found.");
+        }
+        if (!candidatesByEmail.containsKey(candidate)) {
+            throw new IllegalArgumentException("Candidate profile not found.");
+        }
+        boolean exists = shortlists.stream().anyMatch(s ->
+            s.recruiterEmail.equals(recruiter) && s.candidateEmail.equals(candidate));
+        if (!exists) {
+            shortlists.add(new ShortlistEntry(recruiter, candidate, System.currentTimeMillis()));
+            markActivity(recruiter);
+            persistAll();
+        }
+    }
+
+    public synchronized AnalyticsSnapshot getAnalyticsSnapshot() {
+        int signedUp = accountsByEmail.size();
+        int active = (int) userStatsByEmail.values().stream()
+            .filter(s -> s.loginCount > 0 || s.actionCount > 0)
+            .count();
+        Set<String> shortlistedCandidates = shortlists.stream()
+            .map(s -> s.candidateEmail)
+            .collect(Collectors.toSet());
+
+        Map<String, Long> topCandidateSkills = aggregateTopSkillsFromApplicants(10);
+        Map<String, Long> marketDemandSkills = aggregateTopSkillsFromRecruiters(10);
+        Map<String, Long> workModeDemand = recruitersByEmail.values().stream()
+            .collect(Collectors.groupingBy(
+                recruiter -> recruiter.getWorkMode() == null || recruiter.getWorkMode().isBlank()
+                    ? "Not specified"
+                    : recruiter.getWorkMode(),
+                LinkedHashMap::new,
+                Collectors.counting()
+            ));
+
+        return new AnalyticsSnapshot(
+            signedUp,
+            active,
+            shortlistedCandidates.size(),
+            candidatesByEmail.size(),
+            recruitersByEmail.size(),
+            topCandidateSkills,
+            marketDemandSkills,
+            workModeDemand
+        );
     }
 
     public synchronized void addApplicantProfile(Applicant applicant) {
         if (applicant == null) return;
-        candidatesByEmail.put(normalizeEmail(applicant.getEmail()), copyApplicant(applicant));
+        String email = normalizeEmail(applicant.getEmail());
+        candidatesByEmail.put(email, copyApplicant(applicant));
+        userStatsByEmail.putIfAbsent(email, new UserStat(0, 0, 0L));
         persistAll();
     }
 
     public synchronized void addRecruiterProfile(Recruiter recruiter) {
         if (recruiter == null) return;
-        recruitersByEmail.put(normalizeEmail(recruiter.getEmail()), copyRecruiter(recruiter));
+        String email = normalizeEmail(recruiter.getEmail());
+        recruitersByEmail.put(email, copyRecruiter(recruiter));
+        userStatsByEmail.putIfAbsent(email, new UserStat(0, 0, 0L));
         persistAll();
     }
 
@@ -196,6 +297,10 @@ public class DatabaseService {
             loadAll();
             if (accountsByEmail.isEmpty() || candidatesByEmail.isEmpty() || recruitersByEmail.isEmpty()) {
                 seedAndPersist();
+                return;
+            }
+            if (!Files.exists(userStatsFile) || !Files.exists(shortlistsFile)) {
+                persistAll();
             }
         } catch (Exception e) {
             seedAndPersist();
@@ -206,17 +311,21 @@ public class DatabaseService {
         accountsByEmail.clear();
         candidatesByEmail.clear();
         recruitersByEmail.clear();
+        userStatsByEmail.clear();
+        shortlists.clear();
 
         for (Applicant applicant : seedService.seedApplicants()) {
             String email = normalizeEmail(applicant.getEmail());
             candidatesByEmail.put(email, copyApplicant(applicant));
             accountsByEmail.put(email, new UserAccount(email, hashPassword(DEFAULT_SEED_PASSWORD), UserRole.CANDIDATE, applicant.getName()));
+            userStatsByEmail.put(email, new UserStat(0, 0, 0L));
         }
 
         for (Recruiter recruiter : seedService.seedRecruiters()) {
             String email = normalizeEmail(recruiter.getEmail());
             recruitersByEmail.put(email, copyRecruiter(recruiter));
             accountsByEmail.put(email, new UserAccount(email, hashPassword(DEFAULT_SEED_PASSWORD), UserRole.RECRUITER, recruiter.getCompany()));
+            userStatsByEmail.put(email, new UserStat(0, 0, 0L));
         }
 
         persistAll();
@@ -226,6 +335,8 @@ public class DatabaseService {
         accountsByEmail.clear();
         candidatesByEmail.clear();
         recruitersByEmail.clear();
+        userStatsByEmail.clear();
+        shortlists.clear();
 
         List<String> userLines = Files.readAllLines(usersFile, StandardCharsets.UTF_8);
         for (int i = 1; i < userLines.size(); i++) {
@@ -262,15 +373,60 @@ public class DatabaseService {
             String[] parts = line.split("\t", -1);
             if (parts.length < 6) continue;
             String email = normalizeEmail(parts[0]);
+            String roleLevel = parts.length > 6 ? parts[6] : "Intern";
+            String location = parts.length > 7 ? parts[7] : "Not specified";
+            String stipend = parts.length > 8 ? parts[8] : "Not specified";
+            String startDate = parts.length > 9 ? parts[9] : "Flexible";
+            String workMode = parts.length > 10 ? parts[10] : "Hybrid";
             Recruiter recruiter = PersonFactory.createRecruiter(
                 parts[1],
                 email,
                 parts[2],
                 parts[3],
                 Integer.parseInt(parts[4]),
+                roleLevel,
+                location,
+                stipend,
+                startDate,
+                workMode,
                 decodeSkills(parts[5])
             );
             recruitersByEmail.put(email, recruiter);
+        }
+
+        if (Files.exists(userStatsFile)) {
+            List<String> statLines = Files.readAllLines(userStatsFile, StandardCharsets.UTF_8);
+            for (int i = 1; i < statLines.size(); i++) {
+                String line = statLines.get(i);
+                if (line.isBlank()) continue;
+                String[] parts = line.split("\t", -1);
+                if (parts.length < 4) continue;
+                String email = normalizeEmail(parts[0]);
+                userStatsByEmail.put(email, new UserStat(
+                    parseIntSafe(parts[1], 0),
+                    parseIntSafe(parts[2], 0),
+                    parseLongSafe(parts[3], 0L)
+                ));
+            }
+        }
+
+        if (Files.exists(shortlistsFile)) {
+            List<String> shortlistLines = Files.readAllLines(shortlistsFile, StandardCharsets.UTF_8);
+            for (int i = 1; i < shortlistLines.size(); i++) {
+                String line = shortlistLines.get(i);
+                if (line.isBlank()) continue;
+                String[] parts = line.split("\t", -1);
+                if (parts.length < 3) continue;
+                shortlists.add(new ShortlistEntry(
+                    normalizeEmail(parts[0]),
+                    normalizeEmail(parts[1]),
+                    parseLongSafe(parts[2], 0L)
+                ));
+            }
+        }
+
+        for (String email : accountsByEmail.keySet()) {
+            userStatsByEmail.putIfAbsent(email, new UserStat(0, 0, 0L));
         }
     }
 
@@ -302,7 +458,7 @@ public class DatabaseService {
             Files.write(candidatesFile, candidateLines, StandardCharsets.UTF_8);
 
             List<String> recruiterLines = new ArrayList<>();
-            recruiterLines.add("email\trecruiterName\tcompany\tinternshipTitle\tdurationWeeks\trequiredSkills");
+            recruiterLines.add("email\trecruiterName\tcompany\tinternshipTitle\tdurationWeeks\trequiredSkills\troleLevel\tlocation\tstipend\tstartDate\tworkMode");
             for (Recruiter recruiter : recruitersByEmail.values()) {
                 recruiterLines.add(String.join("\t",
                     recruiter.getEmail(),
@@ -310,10 +466,39 @@ public class DatabaseService {
                     recruiter.getCompany(),
                     recruiter.getInternshipTitle(),
                     String.valueOf(recruiter.getDurationWeeks()),
-                    encodeSkills(recruiter.getSkills())
+                    encodeSkills(recruiter.getSkills()),
+                    safeValue(recruiter.getRoleLevel()),
+                    safeValue(recruiter.getLocation()),
+                    safeValue(recruiter.getStipend()),
+                    safeValue(recruiter.getStartDate()),
+                    safeValue(recruiter.getWorkMode())
                 ));
             }
             Files.write(recruitersFile, recruiterLines, StandardCharsets.UTF_8);
+
+            List<String> statLines = new ArrayList<>();
+            statLines.add("email\tloginCount\tactionCount\tlastLoginEpochMillis");
+            for (Map.Entry<String, UserStat> entry : userStatsByEmail.entrySet()) {
+                UserStat stat = entry.getValue();
+                statLines.add(String.join("\t",
+                    entry.getKey(),
+                    String.valueOf(stat.loginCount),
+                    String.valueOf(stat.actionCount),
+                    String.valueOf(stat.lastLoginEpochMillis)
+                ));
+            }
+            Files.write(userStatsFile, statLines, StandardCharsets.UTF_8);
+
+            List<String> shortlistLines = new ArrayList<>();
+            shortlistLines.add("recruiterEmail\tcandidateEmail\ttimestamp");
+            for (ShortlistEntry entry : shortlists) {
+                shortlistLines.add(String.join("\t",
+                    entry.recruiterEmail,
+                    entry.candidateEmail,
+                    String.valueOf(entry.timestamp)
+                ));
+            }
+            Files.write(shortlistsFile, shortlistLines, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Unable to persist local database", e);
         }
@@ -366,6 +551,61 @@ public class DatabaseService {
         return skills;
     }
 
+    private void markActivity(String email) {
+        UserStat stat = userStatsByEmail.computeIfAbsent(email, e -> new UserStat(0, 0, 0L));
+        stat.actionCount++;
+    }
+
+    private String safeValue(String value) {
+        return value == null ? "" : value;
+    }
+
+    private int parseIntSafe(String value, int fallback) {
+        try {
+            return Integer.parseInt(value);
+        } catch (RuntimeException ex) {
+            return fallback;
+        }
+    }
+
+    private long parseLongSafe(String value, long fallback) {
+        try {
+            return Long.parseLong(value);
+        } catch (RuntimeException ex) {
+            return fallback;
+        }
+    }
+
+    private Map<String, Long> aggregateTopSkillsFromApplicants(int limit) {
+        return candidatesByEmail.values().stream()
+            .flatMap(applicant -> applicant.getSkills().stream())
+            .collect(Collectors.groupingBy(Skill::getName, Collectors.counting()))
+            .entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()))
+            .limit(limit)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (a, b) -> a,
+                LinkedHashMap::new
+            ));
+    }
+
+    private Map<String, Long> aggregateTopSkillsFromRecruiters(int limit) {
+        return recruitersByEmail.values().stream()
+            .flatMap(recruiter -> recruiter.getSkills().stream())
+            .collect(Collectors.groupingBy(Skill::getName, Collectors.counting()))
+            .entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()))
+            .limit(limit)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (a, b) -> a,
+                LinkedHashMap::new
+            ));
+    }
+
     private String normalizeEmail(String email) {
         return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
     }
@@ -398,7 +638,36 @@ public class DatabaseService {
             source.getCompany(),
             source.getInternshipTitle(),
             source.getDurationWeeks(),
+            source.getRoleLevel(),
+            source.getLocation(),
+            source.getStipend(),
+            source.getStartDate(),
+            source.getWorkMode(),
             source.getSkills()
         );
+    }
+
+    private static final class UserStat {
+        private int loginCount;
+        private int actionCount;
+        private long lastLoginEpochMillis;
+
+        private UserStat(int loginCount, int actionCount, long lastLoginEpochMillis) {
+            this.loginCount = loginCount;
+            this.actionCount = actionCount;
+            this.lastLoginEpochMillis = lastLoginEpochMillis;
+        }
+    }
+
+    private static final class ShortlistEntry {
+        private final String recruiterEmail;
+        private final String candidateEmail;
+        private final long timestamp;
+
+        private ShortlistEntry(String recruiterEmail, String candidateEmail, long timestamp) {
+            this.recruiterEmail = recruiterEmail;
+            this.candidateEmail = candidateEmail;
+            this.timestamp = timestamp;
+        }
     }
 }

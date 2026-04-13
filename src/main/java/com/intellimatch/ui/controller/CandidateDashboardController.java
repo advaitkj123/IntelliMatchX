@@ -84,6 +84,7 @@ public class CandidateDashboardController implements Initializable {
 
         List<CompanySkillMatchResult> matches =
             matchingService.findCompaniesByCandidateSkills(applicant.getName(), skills, 30);
+        databaseService.recordActivity(currentEmail);
         companyTableView.setItems(FXCollections.observableArrayList(matches));
         if (matches.isEmpty()) {
             matchInsightArea.setText("No company matches found for the current skill set.");

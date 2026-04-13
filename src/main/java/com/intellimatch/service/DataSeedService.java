@@ -42,6 +42,9 @@ public class DataSeedService {
         List<String> companies = companyNames();
         List<String> recruiterNames = recruiterNames();
         List<RecruiterBlueprint> blueprints = recruiterBlueprints();
+        List<String> roleLevels = List.of("Intern", "Entry Level", "Associate", "Graduate");
+        List<String> locations = recruiterLocations();
+        List<String> workModes = List.of("Remote", "Hybrid", "Onsite");
         List<Recruiter> recruiters = new ArrayList<>();
 
         for (int i = 0; i < 50; i++) {
@@ -51,6 +54,11 @@ public class DataSeedService {
             String email = String.format(Locale.ROOT, "talent%d@%s.com", i + 1, slug(company));
             int duration = 10 + ((i % 4) * 2);
             List<Skill> requiredSkills = buildWeightedSkills(blueprint.skills(), i, 0.68);
+            String roleLevel = roleLevels.get(i % roleLevels.size());
+            String location = locations.get(i % locations.size());
+            String stipend = String.format(Locale.ROOT, "$%d/month", 1200 + ((i % 7) * 300));
+            String startDate = String.format(Locale.ROOT, "2026-%02d-01", (i % 9) + 4);
+            String workMode = workModes.get(i % workModes.size());
 
             recruiters.add(PersonFactory.createRecruiter(
                 recruiterName,
@@ -58,6 +66,11 @@ public class DataSeedService {
                 company,
                 blueprint.internshipTitle(),
                 duration,
+                roleLevel,
+                location,
+                stipend,
+                startDate,
+                workMode,
                 requiredSkills
             ));
         }
@@ -85,6 +98,14 @@ public class DataSeedService {
             "Morgan Stanley", "Uber", "Airbnb", "Stripe", "PayPal", "Spotify", "Atlassian", "Shopify", "VMware", "ServiceNow",
             "Snowflake", "Databricks", "Palantir", "Tesla", "SpaceX", "Samsung", "Siemens", "Bosch", "Shell", "Unilever",
             "Procter & Gamble", "The Coca-Cola Company", "PepsiCo", "Nike", "Walmart", "Target", "Booking.com", "ByteDance", "Zoom", "LinkedIn"
+        );
+    }
+
+    private List<String> recruiterLocations() {
+        return List.of(
+            "San Francisco, US", "New York, US", "Seattle, US", "Austin, US", "Boston, US",
+            "Toronto, CA", "London, UK", "Berlin, DE", "Dublin, IE", "Singapore, SG",
+            "Bengaluru, IN", "Hyderabad, IN", "Mumbai, IN", "Sydney, AU", "Amsterdam, NL"
         );
     }
 

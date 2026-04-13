@@ -58,6 +58,7 @@ public class RecruiterLoginController {
         }
 
         SessionManager.setCurrentUser(account.get());
+        databaseService.recordLogin(account.get().getEmail());
         navigateTo("/fxml/recruiter-dashboard.fxml", event);
     }
 
@@ -73,6 +74,7 @@ public class RecruiterLoginController {
                 skills
             );
             SessionManager.setCurrentUser(account);
+            databaseService.recordLogin(account.getEmail());
             navigateTo("/fxml/recruiter-dashboard.fxml", event);
         } catch (IllegalArgumentException ex) {
             statusLabel.setText(ex.getMessage());

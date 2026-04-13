@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -36,6 +37,17 @@ public class RecruiterDashboardController implements Initializable {
     @FXML private Label requiredSkillsLabel;
     @FXML private Label statusLabel;
     @FXML private TextField addSkillsField;
+    @FXML private TextField postingTitleField;
+    @FXML private TextField roleLevelField;
+    @FXML private TextField locationField;
+    @FXML private TextField stipendField;
+    @FXML private TextField startDateField;
+    @FXML private ComboBox<String> workModeComboBox;
+
+    @FXML private TextField filterMinScoreField;
+    @FXML private TextField filterBackgroundField;
+    @FXML private TextField filterMinAvailabilityField;
+    @FXML private TextField filterMinExactMatchesField;
 
     @FXML private TableView<MatchResult> candidateTableView;
     @FXML private TableColumn<MatchResult, String> colCandidate;
@@ -52,6 +64,8 @@ public class RecruiterDashboardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setupTableColumns();
         setupSelectionListener();
+        workModeComboBox.setItems(FXCollections.observableArrayList("Remote", "Hybrid", "Onsite"));
+        workModeComboBox.getSelectionModel().select("Hybrid");
         loadSession();
     }
 
@@ -78,14 +92,46 @@ public class RecruiterDashboardController implements Initializable {
 
         List<MatchResult> results = matchingService.getEngine()
             .getTopCandidatesForRecruiter(recruiter, databaseService.getAllApplicants(), 30);
-        candidateTableView.setItems(FXCollections.observableArrayList(results));
-        if (results.isEmpty()) {
+        List<MatchResult> filtered = applyCandidateFilters(results);
+        databaseService.recordActivity(currentEmail);
+        candidateTableView.setItems(FXCollections.observableArrayList(filtered));
+        if (filtered.isEmpty()) {
             statusLabel.setText("No candidates matched this skill requirement.");
             matchInsightArea.setText("No candidates found.");
             return;
         }
         candidateTableView.getSelectionModel().selectFirst();
-        statusLabel.setText("Found " + results.size() + " candidate matches.");
+        statusLabel.setText("Found " + filtered.size() + " candidate matches after filters.");
+    }
+
+    @FXML
+    private void onSavePostingControls() {
+        try {
+            databaseService.updateRecruiterPostingControls(
+                currentEmail,
+                postingTitleField.getText(),
+                roleLevelField.getText(),
+                locationField.getText(),
+                stipendField.getText(),
+                startDateField.getText(),
+                workModeComboBox.getValue()
+            );
+            populateProfile();
+            statusLabel.setText("Posting controls saved.");
+        } catch (IllegalArgumentException ex) {
+            statusLabel.setText(ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void onShortlistSelectedCandidate() {
+        MatchResult selected = candidateTableView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            statusLabel.setText("Select a candidate first.");
+            return;
+        }
+        databaseService.shortlistCandidate(currentEmail, selected.getApplicant().getEmail());
+        statusLabel.setText("Shortlisted " + selected.getApplicant().getName() + ".");
     }
 
     @FXML
@@ -117,6 +163,14 @@ public class RecruiterDashboardController implements Initializable {
             ? "No required skills configured"
             : recruiter.getSkills().stream().map(s -> s.getName()).collect(Collectors.joining(", "));
         requiredSkillsLabel.setText(skills);
+        postingTitleField.setText(recruiter.getInternshipTitle());
+        roleLevelField.setText(recruiter.getRoleLevel());
+        locationField.setText(recruiter.getLocation());
+        stipendField.setText(recruiter.getStipend());
+        startDateField.setText(recruiter.getStartDate());
+        if (recruiter.getWorkMode() != null && !recruiter.getWorkMode().isBlank()) {
+            workModeComboBox.getSelectionModel().select(recruiter.getWorkMode());
+        }
     }
 
     private void setupTableColumns() {
@@ -147,6 +201,37 @@ public class RecruiterDashboardController implements Initializable {
             .filter(skill -> !skill.isBlank())
             .distinct()
             .collect(Collectors.toList());
+    }
+
+    private List<MatchResult> applyCandidateFilters(List<MatchResult> results) {
+        double minScore = parseDouble(filterMinScoreField.getText(), 0.0);
+        int minAvailability = parseInt(filterMinAvailabilityField.getText(), 0);
+        int minExactMatches = parseInt(filterMinExactMatchesField.getText(), 0);
+        String backgroundKeyword = filterBackgroundField.getText() == null ? "" : filterBackgroundField.getText().trim().toLowerCase();
+
+        return results.stream()
+            .filter(result -> result.getScore() * 100 >= minScore)
+            .filter(result -> result.getApplicant().getAvailabilityWeeks() >= minAvailability)
+            .filter(result -> result.getMatchedSkills().size() >= minExactMatches)
+            .filter(result -> backgroundKeyword.isBlank()
+                || result.getApplicant().getDesiredRole().toLowerCase().contains(backgroundKeyword))
+            .collect(Collectors.toList());
+    }
+
+    private int parseInt(String value, int fallback) {
+        try {
+            return value == null || value.isBlank() ? fallback : Integer.parseInt(value.trim());
+        } catch (RuntimeException ex) {
+            return fallback;
+        }
+    }
+
+    private double parseDouble(String value, double fallback) {
+        try {
+            return value == null || value.isBlank() ? fallback : Double.parseDouble(value.trim());
+        } catch (RuntimeException ex) {
+            return fallback;
+        }
     }
 
     private void navigateTo(String fxmlPath, ActionEvent event) throws IOException {

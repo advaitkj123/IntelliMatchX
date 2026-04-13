@@ -47,6 +47,28 @@ public class PersonFactory {
         return recruiter;
     }
 
+    public static Recruiter createRecruiter(
+            String name,
+            String email,
+            String company,
+            String internshipTitle,
+            int durationWeeks,
+            String roleLevel,
+            String location,
+            String stipend,
+            String startDate,
+            String workMode,
+            List<Skill> requiredSkills) {
+        Recruiter recruiter = new Recruiter(
+            name, email, company, internshipTitle, durationWeeks,
+            roleLevel, location, stipend, startDate, workMode
+        );
+        if (requiredSkills != null) {
+            requiredSkills.forEach(recruiter::addSkill);
+        }
+        return recruiter;
+    }
+
     /**
      * Convenience builder for Skill creation.
      */

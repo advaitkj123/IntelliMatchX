@@ -41,6 +41,11 @@
                             onAction="#onApplicantSelected"
                             prefWidth="260" prefHeight="46"
                             styleClass="btn,btn-success,role-button"/>
+
+                    <Button text="Admin Analytics"
+                            onAction="#onAdminSelected"
+                            prefWidth="260" prefHeight="46"
+                            styleClass="btn,btn-info,role-button"/>
                 </VBox>
             </children>
         </VBox>
